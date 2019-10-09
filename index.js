@@ -63,10 +63,13 @@ client.on("message", async message => {
   }
 
   if (command === "rol") {
-    await message.guild.createRole({
-      name: "Mio",
-      color: "AQUA"
-    }, message.author.send('Me gusta'));
+    await message.reply(message.author.avatarURL);
+
+
+    // await message.guild.createRole({
+    //   name: "Mio",
+    //   color: "AQUA"
+    // }, message.author.send('Me gusta'));
   }
 
   if(command === "ping") {
@@ -75,7 +78,7 @@ client.on("message", async message => {
     //     .catch(console.error);
 
     // message.author.send("Hola");
-     const ok = new Discord.DMChannel(client, "nani");
+    //  const ok = new Discord.DMChannel(client, "nani");
 
 
     // Calculates ping between sending a message and editing it, giving a nice round-trip latency.

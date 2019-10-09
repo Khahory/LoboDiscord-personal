@@ -1,0 +1,55 @@
+Inicia_game:
+    IF(Requiere_4_personas && juego_on == false):
+        Start_tiempo_juego_total (360s hasta 0s)
+        Asignar_roles_random
+        juego_on = true
+    ELSE:
+        No_se_puede
+
+Roles:
+    Jugador
+    >>Roles_secundarios:
+	    Rey
+	    Lobo
+	    Aldeado
+	    Cupido
+
+Buenos:
+	Rey
+	Aldeano
+	Cupido
+
+Malos:
+	Lobo
+----------------------------
+
+Tiempo_juego_total:
+	360 segundos
+	tiempo_noche:
+		60 segundos
+	tiempo_dia:
+		60 segundos
+
+----------------------------
+
+Acciones_dia:
+	todos_roles_deciden_eliminar
+	IF(Rey_actua) => Rey_cancela_decision
+
+Acciones_noche
+	Lobo_actua
+	Cupido_actua
+
+----------------------------
+
+Wins_buenos:
+    Mostrar_gif
+    Mostrar_ganadores
+    juego_on = false
+
+Wins_malos
+    Mostrar_gif
+    Mostrar_ganadores
+    juego_on = false
+
+----------------------------
