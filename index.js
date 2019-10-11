@@ -1,36 +1,15 @@
 
 // Load up the discord.js library
 const Discord = require("discord.js");
+const RolServer = require('./models/Rol');
 
-// This is your client. Some people call it `bot`, some people call it `self`, 
-// some might call it `cootchie`. Either way, when you see `client.something`, or `bot.something`,
-// this is what we're refering to. Your client.
 const client = new Discord.Client();
 
-
-// Here we load the config.json file that contains our token and our prefix values. 
 const config = require("./config.json");
-// config.token contains the bot's token
-// config.prefix contains the message prefix.
 
 
 client.on("ready", () => {
-  // This event will run if the bot starts, and logs in, successfully.
-  console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
-  // Example of changing the bot's playing game to something useful. `client.user` is what the
-  // docs refer to as the "ClientUser".
-  client.user.setActivity(`Serving ${client.guilds.size} servers`);
-});
-
-client.on("guildCreate", guild => {
-  // This event triggers when the bot joins a guild.
-  console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-  client.user.setActivity(`Serving ${client.guilds.size} servers`);
-});
-
-client.on("guildDelete", guild => {
-  // this event triggers when the bot is removed from a guild.
-  console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
+  console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
   client.user.setActivity(`Serving ${client.guilds.size} servers`);
 });
 
@@ -52,12 +31,54 @@ client.on("message", async message => {
   // args = ["Is", "this", "the", "real", "life?"]
   const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
-  
-  // Let's go with a few common example commands! Feel free to delete or change those.
+
+  // Los comandos de mi BOT
+  if (command === 'play') {
+    message.author.send('Welcome to play');
+    let memberRole = message.guild.roles.find('name', 'Jugador');
+    // await message.member.addRole(memberRole);
+
+    message.member.guild.createRole({
+      name: RolServer.RolServer[Math.floor(Math.random() * 4)],
+      color: "DARK_GREEN"
+    }).then((role) => {
+      message.member.addRole(role);
+    })
+  }
+
+  if (command === 'rev') {
+    let miembro = message.member;
+    let role = message.guild.roles.find("name", "Khahory");
+
+    if(!role) return message.channel.send('Rol no encontrado en el servidor.');
+
+    miembro.removeRole(role).catch(console.error);
+    message.channel.send(`El rol **${role.name}** del miembro **${miembro.user}** fue removido  correctamente.`);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   //  El bot responde los menjaes privados
   if (message.channel.type === "dm") {
-    message.author.send("You are DMing me now!");
+    message.author.send("You are DMing me now! = Khahory .dm");
     return;
   }
 
@@ -90,6 +111,12 @@ client.on("message", async message => {
     //   color: "AQUA"
     // }, message.author.send('Me gusta'));
   }
+
+
+
+
+
+
 
   if(command === "ping") {
     // channel.send('hello!')
