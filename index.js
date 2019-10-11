@@ -33,17 +33,23 @@ client.on("message", async message => {
   const command = args.shift().toLowerCase();
 
   // Los comandos de mi BOT
+
   if (command === 'play') {
     message.author.send('Welcome to play');
-    let memberRole = message.guild.roles.find('name', 'Jugador');
-    // await message.member.addRole(memberRole);
 
-    message.member.guild.createRole({
-      name: RolServer.RolServer[Math.floor(Math.random() * 4)],
-      color: "DARK_GREEN"
-    }).then((role) => {
-      message.member.addRole(role);
-    })
+    //  Asignar un Rol que ya esta definido por el Admin del servidor
+    let miembro = message.member;
+    if (message.member.roles.find('name', 'Jugador')) {
+      let memberRole = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 4)]);
+      await message.member.addRole(memberRole).then(() => {
+        message.author.send(`${miembro.user} eres un ${memberRole.name}`);
+      });
+    }else {
+      message.channel.send(`Debes ser un Jugador, escuchaste ${miembro.user} ?`);
+    }
+    message.delete().catch(O_o=>{});
+
+
   }
 
   if (command === 'rev') {
@@ -74,6 +80,21 @@ client.on("message", async message => {
 
 
 
+
+  // if(command === 'rol'){
+  //
+  //   //  Asignar un Rol que ya esta definido por el Admin del servidor
+  //   let miembro = message.member;
+  //   if (message.member.roles.find('name', 'Jugador')) {
+  //     let memberRole = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 4)]);
+  //     await message.member.addRole(memberRole).then(() => {
+  //       message.author.send(`${miembro.user} eres un ${memberRole.name}`);
+  //     });
+  //   }else {
+  //     message.channel.send(`Debes ser un Jugador, escuchaste ${miembro.user} ?`);
+  //   }
+  //   message.delete().catch(O_o=>{});
+  // }
 
 
   //  El bot responde los menjaes privados
