@@ -34,6 +34,10 @@ client.on("message", async message => {
 
   // Los comandos de mi BOT
 
+  if (command === 'join') {
+
+  }
+
   if (command === 'play') {
     message.author.send('Welcome to play');
 
