@@ -14,6 +14,8 @@ client.on("ready", () => {
 });
 
 
+
+
 client.on("message", async message => {
   // This event will run on every single message received, from any channel or DM.
   
@@ -32,10 +34,20 @@ client.on("message", async message => {
   const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
+
   // Los comandos de mi BOT
 
   if (command === 'join') {
+    let myTime = setInterval(myTimer, 5000);
 
+    function myTimer() {
+      message.channel.send('Hola');
+      myStopFunction();
+    }
+
+    function myStopFunction() {
+      clearInterval(myTime);
+    }
   }
 
   if (command === 'play') {
