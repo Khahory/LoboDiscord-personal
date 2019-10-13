@@ -1,3 +1,12 @@
+Preparar_game:
+    IF(preparacion_on == false):
+        preparacion_on = true
+        asignar_anfitrion
+        esperar_que_entren_jugadores
+    IF(tiempo_preparacion = 60s) return preparacion_on = false, cancelar todo
+
+
+
 Inicia_game:
     IF(Requiere_4_personas && juego_on == false):
         Start_tiempo_juego_total (360s hasta 0s)

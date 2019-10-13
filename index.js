@@ -7,6 +7,12 @@ const client = new Discord.Client();
 
 const config = require("./config.json");
 
+// Banderas para controlar los usuarios
+let juego_on = false;
+let preparacion_on = false;
+
+//  Arreglos del servidor
+let jugadores = new Set();
 
 client.on("ready", () => {
   console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
@@ -36,34 +42,80 @@ client.on("message", async message => {
 
 
   // Los comandos de mi BOT
+  if (command === 'play') {
+    if (!preparacion_on) {
+      preparacion_on = true;
+
+      //  Asignar un Rol que ya esta definido por el Admin del servidor
+      let miembro = message.member;
+      let rolJugador = message.member.roles.find('name', 'Jugador');
+      let rolLider = message.member.roles.find('name', 'Anfitrion');
+
+      if (rolJugador && !rolLider) {
+        //Asignar rol lider
+        let memberRole = message.guild.roles.find('name', 'Anfitrion');
+        await message.member.addRole(memberRole).then(() => {
+          message.channel.send(`${miembro.user} eres un ${memberRole.name}`);
+          jugadores.add(message.member.user);
+        });
+      }else {
+        message.channel.send(`Ya eres anfitrion, escuchaste ${miembro.user} ?`);
+      }
+      message.delete().catch(O_o=>{});
+
+    } else return message.channel.send('Ya hay una preparacion activa')
+
+  }
+
+  if (command === 'mos') {
+    jugadores.forEach((value, index, array) => {
+      message.channel.send('Jugadores activos: ' +value);
+    });
+  }
 
   if (command === 'join') {
-    let myTime = setInterval(myTimer, 5000);
+    if (preparacion_on) {
+      // jugadores.push(message.member.user);
 
-    function myTimer() {
-      message.channel.send('Hola');
-      myStopFunction();
-    }
+      if (jugadores.has(message.member.user)) {
+        return message.channel.send('Eehh, dime? ya estas dentro')
+      } else {
+        jugadores.add(message.member.user);
+        return message.channel.send('¡Te has unido!')
+      }
 
-    function myStopFunction() {
-      clearInterval(myTime);
+      // jugadores.forEach((value, index, array) => {
+      //   let userJugador = message.member.user;
+      //   if (userJugador.equals(value)) {
+      //
+      //     message.channel.send(`Ya estas dentro de la preparacion ${userJugador}`);
+      //
+      //   } else if ( !(userJugador.equals(value)) ){
+      //     jugadores.push(userJugador);
+      //     message.channel.send(`Te uniste ${userJugador}`);
+      //   }
+      // });
+
+
+    } else {
+      message.channel.send('Nadie ha iniciado una preparacion del juego')
     }
   }
 
-  if (command === 'play') {
-    message.author.send('Welcome to play');
-
-    //  Asignar un Rol que ya esta definido por el Admin del servidor
-    let miembro = message.member;
-    if (message.member.roles.find('name', 'Jugador')) {
-      let memberRole = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 4)]);
-      await message.member.addRole(memberRole).then(() => {
-        message.author.send(`${miembro.user} eres un ${memberRole.name}`);
-      });
-    }else {
-      message.channel.send(`Debes ser un Jugador, escuchaste ${miembro.user} ?`);
-    }
-    message.delete().catch(O_o=>{});
+  if (command === 'start') {
+    // message.author.send('Welcome to play');
+    //
+    // //  Asignar un Rol que ya esta definido por el Admin del servidor
+    // let miembro = message.member;
+    // if (message.member.roles.find('name', 'Jugador')) {
+    //   let memberRole = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 4)]);
+    //   await message.member.addRole(memberRole).then(() => {
+    //     message.author.send(`${miembro.user} eres un ${memberRole.name}`);
+    //   });
+    // }else {
+    //   message.channel.send(`Debes ser un Jugador, escuchaste ${miembro.user} ?`);
+    // }
+    // message.delete().catch(O_o=>{});
 
 
   }
@@ -76,6 +128,13 @@ client.on("message", async message => {
 
     miembro.removeRole(role).catch(console.error);
     message.channel.send(`El rol **${role.name}** del miembro **${miembro.user}** fue removido  correctamente.`);
+  }
+
+  if (command === 'reset') {
+    message.channel.send('Todo se fue al carajo');
+    preparacion_on = false;
+    juego_on = false;
+    jugadores = new Set();
   }
 
 
