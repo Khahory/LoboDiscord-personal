@@ -8,21 +8,20 @@ Preparar_game:
 
 
 Inicia_game:
-    IF(Requiere_4_personas && juego_on == false):
+    IF(Requiere_4_personas && juego_on == false):   #done
         Start_tiempo_juego_total (360s hasta 0s)
         Asignar_roles_random                        #done
-        juego_on = true
-    ELSE:
-        No_se_puede
+        juego_on = true                             #done
+    ELSE:                                           #done
+        No_se_puede                                 #done
 
-Roles:
-    Jugador
-    Anfitrion
-    >>Roles_secundarios:
-	    Rey
-	    Lobo
-	    Aldeado
-	    Cupido
+Roles:                                              #done
+    Jugador                                         #done
+    Anfitrion                                       #done
+    >>Roles_secundarios:                            #done
+	    Rey                                         #done
+	    Lobo                                        #done
+	    Aldeado                                     #done
 
 Buenos:
 	Rey
