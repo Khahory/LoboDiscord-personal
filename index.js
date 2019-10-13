@@ -114,27 +114,45 @@ client.on("message", async message => {
     let rolLider = message.member.roles.find('name', 'Anfitrion');
     let miembro = message.member;
 
+    // if (rolLider) {
+    //   //  Asignar un Rol que ya esta definido por el Admin del servidor
+    //   if (message.member.roles.find('name', 'BotLobo')) {
+    //     let memberRole = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 4)]);
+    //     await message.member.addRole(memberRole).then(() => {
+    //       message.author.send(`${miembro.user} eres un ${memberRole.name}`);
+    //     });
+    //   }else {
+    //     message.channel.send(`Debes ser un BotLobo, escuchaste ${miembro.user} ?`);
+    //   }
+    //   message.delete().catch(O_o=>{});
+    // }else {
+    //   message.channel.send(`No eres el **Anfitrion** ${miembro.user} ?`);
+    // }
+
     if (rolLider) {
-      //  Asignar un Rol que ya esta definido por el Admin del servidor
-      if (message.member.roles.find('name', 'BotLobo')) {
-        let memberRole = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 4)]);
-        await message.member.addRole(memberRole).then(() => {
-          message.author.send(`${miembro.user} eres un ${memberRole.name}`);
+      let rolJugador = message.guild.roles.find("name", 'Jugador');
+      let miembroroles = message.guild.roles.get(rolJugador.id).members;
+
+      miembroroles.forEach((value, key, map) => {
+
+        let rolRandom = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 4)]);
+        value.addRole(rolRandom).then(() => {
+          // message.author.send(`${miembro.user} eres un ${rolRandom.name}`);
+          message.channel.send(`Rol asignado ${value}`);
+          value.send(`Tu rol es ${rolRandom.name}`);
         });
-      }else {
-        message.channel.send(`Debes ser un BotLobo, escuchaste ${miembro.user} ?`);
+
+      });
+    } else {
+        message.channel.send(`No eres el **Anfitrion** ${miembro.user}`);
       }
-      message.delete().catch(O_o=>{});
-    }else {
-      message.channel.send(`No eres el **Anfitrion** ${miembro.user} ?`);
-    }
   }
 
   if (command === 'remover') {
-    let miembro = message.member;
-    let role = message.guild.roles.find("name", 'Anfitrion');
-    miembro.removeRole(role).catch(console.error);
-    message.channel.send(`El rol **${role.name}** del miembro **${miembro.user}** fue removido  correctamente.`);
+    // let miembro = message.member;
+    // let role = message.guild.roles.find("name", 'Anfitrion');
+    // miembro.removeRole(role).catch(console.error);
+    // message.channel.send(`El rol **${role.name}** del miembro **${miembro.user}** fue removido  correctamente.`);
   }
 
   if (command === 'reset') {
@@ -152,7 +170,7 @@ client.on("message", async message => {
     message.channel.send(`Tienes a **${miembroroles.size}** miembro(s) con el rol **Anfitrion**.`);
 
     miembroroles.forEach((value, key, map) => {
-      value.removeRole(rolAnfitrion).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
+      value.removeRole(rolAnfitrion).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario) '));
       value.removeRole(rolJugador).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
     });
 
