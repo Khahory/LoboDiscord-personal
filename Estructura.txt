@@ -3,7 +3,7 @@ Preparar_game:
         preparacion_on = true                       #done
         asignar_anfitrion                           #done
         esperar_que_entren_jugadores                #done
-    IF(tiempo_preparacion = 60s) return preparacion_on = false, cancelar todo
+    IF(tiempo_preparacion = 60s) return preparacion_on = false, cancelar todito         #done
 
 
 
@@ -17,6 +17,7 @@ Inicia_game:
 
 Roles:
     Jugador
+    Anfitrion
     >>Roles_secundarios:
 	    Rey
 	    Lobo

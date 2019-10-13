@@ -48,16 +48,19 @@ client.on("message", async message => {
 
       //  Asignar un Rol que ya esta definido por el Admin del servidor
       let miembro = message.member;
-      let rolJugador = message.member.roles.find('name', 'Jugador');
+      let rolJugador = message.member.roles.find('name', 'BotLobo');
       let rolLider = message.member.roles.find('name', 'Anfitrion');
 
       if (rolJugador && !rolLider) {
         //Asignar rol lider
         let memberRole = message.guild.roles.find('name', 'Anfitrion');
-        await message.member.addRole(memberRole).then(() => {
+        let memberJugador = message.guild.roles.find('name', 'Jugador');
+
+        await message.member.addRoles([memberRole, memberJugador]).then(() => {
           message.channel.send(`${miembro.user} eres un ${memberRole.name}`);
           jugadores.add(message.member.user);
         });
+
       }else {
         message.channel.send(`Ya eres anfitrion, escuchaste ${miembro.user} ?`);
       }
@@ -87,11 +90,17 @@ client.on("message", async message => {
 
   if (command === 'join') {
     if (preparacion_on) {
-      // jugadores.push(message.member.user);
 
       if (jugadores.has(message.member.user)) {
         return message.channel.send('Eehh, dime? ya estas dentro')
       } else {
+        let memberJugador = message.guild.roles.find('name', 'Jugador');
+        if (!memberJugador) return message.channel.send('No se encontro el rol **Jugador** en el server');
+
+        await message.member.addRole(memberJugador).then(() => {
+          message.author.send(`${message.member.user} eres un ${memberJugador.name}`);
+        });
+
         jugadores.add(message.member.user);
         return message.channel.send('¡Te has unido!')
       }
@@ -102,24 +111,26 @@ client.on("message", async message => {
   }
 
   if (command === 'start') {
-    // message.author.send('Welcome to play');
-    //
-    // //  Asignar un Rol que ya esta definido por el Admin del servidor
-    // let miembro = message.member;
-    // if (message.member.roles.find('name', 'Jugador')) {
-    //   let memberRole = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 4)]);
-    //   await message.member.addRole(memberRole).then(() => {
-    //     message.author.send(`${miembro.user} eres un ${memberRole.name}`);
-    //   });
-    // }else {
-    //   message.channel.send(`Debes ser un Jugador, escuchaste ${miembro.user} ?`);
-    // }
-    // message.delete().catch(O_o=>{});
+    let rolLider = message.member.roles.find('name', 'Anfitrion');
+    let miembro = message.member;
 
-
+    if (rolLider) {
+      //  Asignar un Rol que ya esta definido por el Admin del servidor
+      if (message.member.roles.find('name', 'BotLobo')) {
+        let memberRole = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 4)]);
+        await message.member.addRole(memberRole).then(() => {
+          message.author.send(`${miembro.user} eres un ${memberRole.name}`);
+        });
+      }else {
+        message.channel.send(`Debes ser un BotLobo, escuchaste ${miembro.user} ?`);
+      }
+      message.delete().catch(O_o=>{});
+    }else {
+      message.channel.send(`No eres el **Anfitrion** ${miembro.user} ?`);
+    }
   }
 
-  if (command === 'rev') {
+  if (command === 'remover') {
     let miembro = message.member;
     let role = message.guild.roles.find("name", 'Anfitrion');
     miembro.removeRole(role).catch(console.error);
@@ -135,15 +146,16 @@ client.on("message", async message => {
 
   if(command === 'busca'){
     let miembro = message.member;
-    let rol = message.guild.roles.find("name", 'Anfitrion');
-    let miembroroles = message.guild.roles.get(rol.id).members;
-    console.log(miembroroles[1]);
+    let rolAnfitrion = message.guild.roles.find("name", 'Anfitrion');
+    let rolJugador = message.guild.roles.find("name", 'Jugador');
+    let miembroroles = message.guild.roles.get(rolJugador.id).members;
     message.channel.send(`Tienes a **${miembroroles.size}** miembro(s) con el rol **Anfitrion**.`);
-    // miembro.removeRole().catch(console.error);
 
     miembroroles.forEach((value, key, map) => {
-      value.removeRole(rol).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
+      value.removeRole(rolAnfitrion).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
+      value.removeRole(rolJugador).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
     });
+
   }
 
   function resetTodo() {
@@ -184,13 +196,13 @@ client.on("message", async message => {
   //
   //   //  Asignar un Rol que ya esta definido por el Admin del servidor
   //   let miembro = message.member;
-  //   if (message.member.roles.find('name', 'Jugador')) {
+  //   if (message.member.roles.find('name', 'BotLobo')) {
   //     let memberRole = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 4)]);
   //     await message.member.addRole(memberRole).then(() => {
   //       message.author.send(`${miembro.user} eres un ${memberRole.name}`);
   //     });
   //   }else {
-  //     message.channel.send(`Debes ser un Jugador, escuchaste ${miembro.user} ?`);
+  //     message.channel.send(`Debes ser un BotLobo, escuchaste ${miembro.user} ?`);
   //   }
   //   message.delete().catch(O_o=>{});
   // }
