@@ -52,7 +52,7 @@ client.on("message", async message => {
       let rolLider = message.member.roles.find('name', 'Anfitrion');
 
       if (rolJugador && !rolLider) {
-        //Asignar rol lider
+        //Asignar rol Anfitrion
         let memberRole = message.guild.roles.find('name', 'Anfitrion');
         let memberJugador = message.guild.roles.find('name', 'Jugador');
 
@@ -69,8 +69,9 @@ client.on("message", async message => {
     } else return message.channel.send('Ya hay una preparacion activa');
 
 
+    //`Timer
     let myTime = setInterval(myTimer, 500000);
-    function myTimer() {
+    function myTimer() {  //  Se ejecuta cuando se acaba el tiempo
       myStopFunction();
       message.channel.send('Oh oh, se acabo el tiempo de iniciar el juego');
       resetTodo();
@@ -82,12 +83,14 @@ client.on("message", async message => {
 
   }
 
+  //  Mostrat a todos los jugadores activos con el rol
   if (command === 'mos') {
     jugadores.forEach((value, index, array) => {
       message.channel.send('Jugadores activos: ' +value);
     });
   }
 
+  //  Agregar a los jugadores a la lista y asignarles e rol Jugador
   if (command === 'join') {
     if (preparacion_on) {
 
@@ -111,35 +114,21 @@ client.on("message", async message => {
   }
 
   if (command === 'start') {
+    //  Obteniendo el rol anfitrion y un objeto miembro
     let rolLider = message.member.roles.find('name', 'Anfitrion');
     let miembro = message.member;
 
-    // if (rolLider) {
-    //   //  Asignar un Rol que ya esta definido por el Admin del servidor
-    //   if (message.member.roles.find('name', 'BotLobo')) {
-    //     let memberRole = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 4)]);
-    //     await message.member.addRole(memberRole).then(() => {
-    //       message.author.send(`${miembro.user} eres un ${memberRole.name}`);
-    //     });
-    //   }else {
-    //     message.channel.send(`Debes ser un BotLobo, escuchaste ${miembro.user} ?`);
-    //   }
-    //   message.delete().catch(O_o=>{});
-    // }else {
-    //   message.channel.send(`No eres el **Anfitrion** ${miembro.user} ?`);
-    // }
-
+    //  Asignar los roles random
     if (rolLider) {
       let rolJugador = message.guild.roles.find("name", 'Jugador');
       let miembroroles = message.guild.roles.get(rolJugador.id).members;
 
+      //  Lista que recorre a todos lo que sean de rol Jugador
       miembroroles.forEach((value, key, map) => {
-
         let rolRandom = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 4)]);
-        value.addRole(rolRandom).then(() => {
-          // message.author.send(`${miembro.user} eres un ${rolRandom.name}`);
+        value.addRole(rolRandom).then(() => {   //Asignamos el rol al jugador
           message.channel.send(`Rol asignado ${value}`);
-          value.send(`Tu rol es ${rolRandom.name}`);
+          value.send(`Tu rol es ${rolRandom.name}`);  //  Enviamos un dm al jugador que toca
         });
 
       });
@@ -155,6 +144,7 @@ client.on("message", async message => {
     // message.channel.send(`El rol **${role.name}** del miembro **${miembro.user}** fue removido  correctamente.`);
   }
 
+  //  Resetea rodito pa poder iniciar un juego de nuevo
   if (command === 'reset') {
     message.channel.send('Todo se fue al carajo');
     preparacion_on = false;
@@ -162,6 +152,7 @@ client.on("message", async message => {
     jugadores = new Set();
   }
 
+  // Busca y eliminas a los usuarios con rol Anfitrion y Jugador
   if(command === 'busca'){
     let miembro = message.member;
     let rolAnfitrion = message.guild.roles.find("name", 'Anfitrion');
