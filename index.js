@@ -63,7 +63,19 @@ client.on("message", async message => {
       }
       message.delete().catch(O_o=>{});
 
-    } else return message.channel.send('Ya hay una preparacion activa')
+    } else return message.channel.send('Ya hay una preparacion activa');
+
+
+    let myTime = setInterval(myTimer, 500000);
+    function myTimer() {
+      myStopFunction();
+      message.channel.send('Oh oh, se acabo el tiempo de iniciar el juego');
+      resetTodo();
+    }
+
+    function myStopFunction() {
+      clearInterval(myTime);
+    }
 
   }
 
@@ -83,19 +95,6 @@ client.on("message", async message => {
         jugadores.add(message.member.user);
         return message.channel.send('¡Te has unido!')
       }
-
-      // jugadores.forEach((value, index, array) => {
-      //   let userJugador = message.member.user;
-      //   if (userJugador.equals(value)) {
-      //
-      //     message.channel.send(`Ya estas dentro de la preparacion ${userJugador}`);
-      //
-      //   } else if ( !(userJugador.equals(value)) ){
-      //     jugadores.push(userJugador);
-      //     message.channel.send(`Te uniste ${userJugador}`);
-      //   }
-      // });
-
 
     } else {
       message.channel.send('Nadie ha iniciado una preparacion del juego')
@@ -122,10 +121,7 @@ client.on("message", async message => {
 
   if (command === 'rev') {
     let miembro = message.member;
-    let role = message.guild.roles.find("name", "Khahory");
-
-    if(!role) return message.channel.send('Rol no encontrado en el servidor.');
-
+    let role = message.guild.roles.find("name", 'Anfitrion');
     miembro.removeRole(role).catch(console.error);
     message.channel.send(`El rol **${role.name}** del miembro **${miembro.user}** fue removido  correctamente.`);
   }
@@ -135,6 +131,34 @@ client.on("message", async message => {
     preparacion_on = false;
     juego_on = false;
     jugadores = new Set();
+  }
+
+  if(command === 'busca'){
+    let miembro = message.member;
+    let rol = message.guild.roles.find("name", 'Anfitrion');
+    let miembroroles = message.guild.roles.get(rol.id).members;
+    console.log(miembroroles[1]);
+    message.channel.send(`Tienes a **${miembroroles.size}** miembro(s) con el rol **Anfitrion**.`);
+    // miembro.removeRole().catch(console.error);
+
+    miembroroles.forEach((value, key, map) => {
+      value.removeRole(rol).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
+    });
+  }
+
+  function resetTodo() {
+    preparacion_on = false;
+    juego_on = false;
+    jugadores = new Set();
+    removerAnfitrion();
+  }
+
+  function removerAnfitrion() {
+    let miembro = message.member;
+    let role = message.guild.roles.find("name", 'Anfitrion');
+    if(!role) return message.channel.send('Rol no encontrado en el servidor.');
+    miembro.removeRole(role).catch(console.error);
+    message.channel.send(`El rol **${role.name}** del miembro **${miembro.user}** fue removido  correctamente.`);
   }
 
 

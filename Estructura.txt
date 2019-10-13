@@ -1,8 +1,8 @@
 Preparar_game:
-    IF(preparacion_on == false):
-        preparacion_on = true
-        asignar_anfitrion
-        esperar_que_entren_jugadores
+    IF(preparacion_on == false):                    #done
+        preparacion_on = true                       #done
+        asignar_anfitrion                           #done
+        esperar_que_entren_jugadores                #done
     IF(tiempo_preparacion = 60s) return preparacion_on = false, cancelar todo
 
 
