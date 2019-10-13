@@ -1,5 +1,5 @@
 
 exports.RolServer =  Roles = [
-  'Lobo', "Rey", "Aldeano", "Cupido"
+  'Lobo', "Rey", "Aldeano"
 ];
 

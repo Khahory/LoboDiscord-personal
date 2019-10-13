@@ -125,7 +125,7 @@ client.on("message", async message => {
 
       //  Lista que recorre a todos lo que sean de rol Jugador
       miembroroles.forEach((value, key, map) => {
-        let rolRandom = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 4)]);
+        let rolRandom = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 3)]);
         value.addRole(rolRandom).then(() => {   //Asignamos el rol al jugador
           message.channel.send(`Rol asignado ${value}`);
           value.send(`Tu rol es ${rolRandom.name}`);  //  Enviamos un dm al jugador que toca
@@ -146,7 +146,7 @@ client.on("message", async message => {
 
   //  Resetea rodito pa poder iniciar un juego de nuevo
   if (command === 'reset') {
-    message.channel.send('Todo se fue al carajo');
+    message.channel.send('Todo se fue al carajo, pero no los roles');
     preparacion_on = false;
     juego_on = false;
     jugadores = new Set();
@@ -164,6 +164,27 @@ client.on("message", async message => {
       value.removeRole(rolAnfitrion).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario) '));
       value.removeRole(rolJugador).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
     });
+
+      let rolLobo = message.guild.roles.find("name", 'Lobo');
+      let memberLobos = message.guild.roles.get(rolLobo.id).members;
+      memberLobos.forEach((value, key, map) => {
+          value.removeRole(rolLobo).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
+          message.channel.send(`${value} se elimino el rol: ${rolLobo}`);
+      });
+
+      let rolAldeano = message.guild.roles.find("name", 'Aldeano');
+      let memberAldeanos = message.guild.roles.get(rolAldeano.id).members;
+      memberAldeanos.forEach((value, key, map) => {
+          value.removeRole(rolAldeano).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
+          message.channel.send(`${value} se elimino el rol: ${rolAldeano}`);
+      });
+
+      let rolRey = message.guild.roles.find("name", 'Rey');
+      let memberReyes = message.guild.roles.get(rolRey.id).members;
+      memberReyes.forEach((value, key, map) => {
+          value.removeRole(rolRey).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
+          message.channel.send(`${value} se elimino el rol: ${rolRey}`);
+      });
 
   }
 
