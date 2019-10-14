@@ -14,6 +14,8 @@ let preparacion_on = false;
 //  Arreglos del servidor
 let jugadores = new Set();
 let lobos = new Set();
+let aldeanos = new Set();
+let reyes = new Set();
 
 client.on("ready", () => {
   console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
@@ -211,6 +213,31 @@ client.on("message", async message => {
     if(!role) return message.channel.send('Rol no encontrado en el servidor.');
     miembro.removeRole(role).catch(console.error);
     message.channel.send(`El rol **${role.name}** del miembro **${miembro.user}** fue removido  correctamente.`);
+  }
+
+  //  Llenar los arreglos de los personajes
+  function asignarPersonajes() {
+    let x = message.member.user;
+    let contador = jugadores.size;
+
+    jugadores.forEach((value, key, map) => {
+      let numRandom = Math.floor(Math.random() * contador);
+
+      //  Asignando personajes
+      if (lobos.size < 1) {
+        lobos.add(jugadores[numRandom]);
+      }
+
+      if (reyes.size < 1) {
+        reyes.add(jugadores[numRandom]);
+      }
+
+      if (aldeanos.size >= 0) {
+        aldeanos.add(jugadores[numRandom]);
+      }
+
+      contador = contador - 1;
+    });
   }
 
   function ejecutar_noche() {
