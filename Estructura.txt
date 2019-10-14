@@ -32,11 +32,12 @@ Malos:                                              #done
 ----------------------------
 
 Tiempo_juego_total:
-	360 segundos
+	preparacion_game:                               #done
+	    180 segundos
 	tiempo_noche:
-		60 segundos
+		40 segundos
 	tiempo_dia:
-		60 segundos
+		120 segundos
 
 ----------------------------
 
@@ -46,7 +47,6 @@ Acciones_dia:
 
 Acciones_noche
 	Lobo_actua
-	Cupido_actua
 
 ----------------------------
 

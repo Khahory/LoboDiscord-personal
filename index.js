@@ -68,7 +68,6 @@ client.on("message", async message => {
 
     } else return message.channel.send('Ya hay una preparacion activa');
 
-
     //`Timer
     let myTime = setInterval(myTimer, 500000);
     function myTimer() {  //  Se ejecuta cuando se acaba el tiempo
@@ -131,8 +130,15 @@ client.on("message", async message => {
         miembroroles.forEach((value, key, map) => {
           let rolRandom = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 3)]);
           value.addRole(rolRandom).then(() => {   //Asignamos el rol al jugador
+
             message.channel.send(`Rol asignado ${value}`);
             value.send(`Tu rol es ${rolRandom.name}`);  //  Enviamos un dm al jugador que toca
+
+            // comprobamos si el rol que le toco es un lobo
+            if (rolRandom.name === 'Lobo') {
+              ejecutar_noche();
+            }
+
           });
         });
       } else {
@@ -141,12 +147,6 @@ client.on("message", async message => {
     } else { message.channel.send('Ya hay una partida iniciada o no hay jugadores suficientes (minimo 4)')}
   }
 
-  if (command === 'remover') {
-    // let miembro = message.member;
-    // let role = message.guild.roles.find("name", 'Anfitrion');
-    // miembro.removeRole(role).catch(console.error);
-    // message.channel.send(`El rol **${role.name}** del miembro **${miembro.user}** fue removido  correctamente.`);
-  }
 
   //  Resetea rodito pa poder iniciar un juego de nuevo
   if (command === 'reset') {
@@ -193,6 +193,10 @@ client.on("message", async message => {
       });
   }
 
+  if (command === 'comer') {
+
+  }
+
   function resetTodo() {
     preparacion_on = false;
     juego_on = false;
@@ -206,6 +210,21 @@ client.on("message", async message => {
     if(!role) return message.channel.send('Rol no encontrado en el servidor.');
     miembro.removeRole(role).catch(console.error);
     message.channel.send(`El rol **${role.name}** del miembro **${miembro.user}** fue removido  correctamente.`);
+  }
+
+  function ejecutar_noche() {
+    let rolAldeano = message.guild.roles.find("name", 'Jugador');
+    let miembroroles = message.guild.roles.get(rolAldeano.id).members;
+
+    message.author.send(`Tienes a **${miembroroles.size}** miembro(s) con el rol **Jugador**.`);
+
+    miembroroles.forEach((value, key, map) => {
+      message.author.send(`Aldeano es: ${value} su ID es: **${key}**`)
+    });
+  }
+
+  function actua_Lobo() {
+
   }
 
 
