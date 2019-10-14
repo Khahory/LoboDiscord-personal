@@ -13,6 +13,7 @@ let preparacion_on = false;
 
 //  Arreglos del servidor
 let jugadores = new Set();
+let lobos = new Set();
 
 client.on("ready", () => {
   console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
