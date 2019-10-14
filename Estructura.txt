@@ -23,13 +23,12 @@ Roles:                                              #done
 	    Lobo                                        #done
 	    Aldeado                                     #done
 
-Buenos:
-	Rey
-	Aldeano
-	Cupido
+Buenos:                                             #done
+	Rey                                             #done
+	Aldeano                                         #done
 
-Malos:
-	Lobo
+Malos:                                              #done
+	Lobo                                            #done
 ----------------------------
 
 Tiempo_juego_total:
