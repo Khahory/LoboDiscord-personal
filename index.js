@@ -226,17 +226,22 @@ client.on("message", async message => {
       //  Asignando personajes
       if (lobos.size < 1) {
         lobos.add(jugadores[numRandom]);
+        jugadores.delete(numRandom);
+        contador = jugadores.size;    // Cambiando valor de la cantidad de jugadores
+        return
       }
 
       if (reyes.size < 1) {
         reyes.add(jugadores[numRandom]);
+        jugadores.delete(numRandom);
+        contador = jugadores.size;    // Cambiando valor de la cantidad de jugadores
       }
 
       if (aldeanos.size >= 0) {
         aldeanos.add(jugadores[numRandom]);
+        jugadores.delete(numRandom);
+        contador = jugadores.size;    // Cambiando valor de la cantidad de jugadores
       }
-
-      contador = contador - 1;
     });
   }
 
