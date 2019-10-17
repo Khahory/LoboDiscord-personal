@@ -13,6 +13,7 @@ let preparacion_on = false;
 
 //  Arreglos del servidor
 let jugadores = new Set();
+let jugadoresSinRoles = new Set();
 let lobos = new Set();
 let aldeanos = new Set();
 let reyes = new Set();
@@ -62,6 +63,8 @@ client.on("message", async message => {
         await message.member.addRoles([memberRole, memberJugador]).then(() => {
           message.channel.send(`${miembro.user} eres un ${memberRole.name}`);
           jugadores.add(message.member.user);
+
+          message.channel.send('En .play se agrego un jugador');
         });
 
       }else {
@@ -125,25 +128,27 @@ client.on("message", async message => {
 
       //  Asignar los roles random
       if (rolLider) {
-        let rolJugador = message.guild.roles.find("name", 'Jugador');
-        let miembroroles = message.guild.roles.get(rolJugador.id).members;
+        // let rolJugador = message.guild.roles.find("name", 'Jugador');
+        // let miembroroles = message.guild.roles.get(rolJugador.id).members;
         juego_on = true;
 
+        asignarPersonajes();
+
         //  Lista que recorre a todos lo que sean de rol Jugador
-        miembroroles.forEach((value, key, map) => {
-          let rolRandom = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 3)]);
-          value.addRole(rolRandom).then(() => {   //Asignamos el rol al jugador
-
-            message.channel.send(`Rol asignado ${value}`);
-            value.send(`Tu rol es ${rolRandom.name}`);  //  Enviamos un dm al jugador que toca
-
-            // comprobamos si el rol que le toco es un lobo
-            if (rolRandom.name === 'Lobo') {
-              ejecutar_noche();
-            }
-
-          });
-        });
+        // miembroroles.forEach((value, key, map) => {
+        //   let rolRandom = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 3)]);
+        //   value.addRole(rolRandom).then(() => {   //Asignamos el rol al jugador
+        //
+        //     message.channel.send(`Rol asignado ${value}`);
+        //     value.send(`Tu rol es ${rolRandom.name}`);  //  Enviamos un dm al jugador que toca
+        //
+        //     // comprobamos si el rol que le toco es un lobo
+        //     if (rolRandom.name === 'Lobo') {
+        //       ejecutar_noche();
+        //     }
+        //
+        //   });
+        // });
       } else {
         message.channel.send(`No eres el **Anfitrion** ${miembro.user}`);
       }
@@ -220,29 +225,55 @@ client.on("message", async message => {
     let x = message.member.user;
     let contador = jugadores.size;
 
+    jugadores.forEach((value, value2, set) => {
+      jugadoresSinRoles.add(value);
+    });
+
     jugadores.forEach((value, key, map) => {
       let numRandom = Math.floor(Math.random() * contador);
 
       //  Asignando personajes
       if (lobos.size < 1) {
-        lobos.add(jugadores[numRandom]);
-        jugadores.delete(numRandom);
-        contador = jugadores.size;    // Cambiando valor de la cantidad de jugadores
-        return
+        lobos.add(jugadoresSinRoles[numRandom]);
+
+        jugadoresSinRoles.delete(numRandom);
+
+        contador = jugadoresSinRoles.size;    // Cambiando valor de la cantidad de jugadores
+        message.channel.send('Se agrego un lobo');
+        message.channel.send('La lista de los lobos tiene: ' +lobos.size);
+        lobos.forEach((value1, value2, set) => {
+          message.channel.send('Los lobos son: ' +value1);
+        });
+        return;
       }
 
       if (reyes.size < 1) {
-        reyes.add(jugadores[numRandom]);
-        jugadores.delete(numRandom);
-        contador = jugadores.size;    // Cambiando valor de la cantidad de jugadores
+        reyes.add(jugadoresSinRoles[numRandom]);
+        jugadoresSinRoles.delete(numRandom);
+        contador = jugadoresSinRoles.size;    // Cambiando valor de la cantidad de jugadores
+        message.channel.send('Se agrego un rey');
+        return;
       }
 
       if (aldeanos.size >= 0) {
-        aldeanos.add(jugadores[numRandom]);
-        jugadores.delete(numRandom);
-        contador = jugadores.size;    // Cambiando valor de la cantidad de jugadores
+        aldeanos.add(jugadoresSinRoles[numRandom]);
+        jugadoresSinRoles.delete(numRandom);
+        contador = jugadoresSinRoles.size;    // Cambiando valor de la cantidad de jugadores
+        message.channel.send('Se agrego un aldeano');
       }
     });
+
+    // lobos.forEach((value, value2, set) => {
+    //   message.channel.send('Los lobos son: ' +value);
+    // });
+    //
+    // aldeanos.forEach((value, value2) => {
+    //   message.channel.send('Los aldeanos son: ' +value);
+    // });
+    //
+    // reyes.forEach((value, value2) => {
+    //   message.channel.send('Los reyes son: ' +value);
+    // });
   }
 
   function ejecutar_noche() {
