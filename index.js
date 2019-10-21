@@ -63,8 +63,6 @@ client.on("message", async message => {
         await message.member.addRoles([memberRole, memberJugador]).then(() => {
           message.channel.send(`${miembro.user} eres un ${memberRole.name}`);
           jugadores.add(message.member.user);
-
-          message.channel.send('En .play se agrego un jugador');
         });
 
       }else {
@@ -222,17 +220,21 @@ client.on("message", async message => {
 
   //  Llenar los arreglos de los personajes
   function asignarPersonajes() {
-    let x = message.member.user;
-    let contador = jugadores.size;
 
-    jugadores.forEach((value, value2, set) => {
+    jugadores.forEach((value, value2) => {
       jugadoresSinRoles.add(value);
     });
 
-    jugadores.forEach((value, key, map) => {
-      let numRandom = Math.floor(Math.random() * contador);
+    let x = message.member.user;
+    let limiteJugadores = jugadoresSinRoles.size;
+    let gente = [];
+    message.channel.send('LimiteJugadores: ' +limiteJugadores);
 
+
+    jugadores.forEach((value, key, map) => {
+      let numRandom = Math.floor(Math.random() * limiteJugadores);
     });
+
   }
 
   function ejecutar_noche() {
