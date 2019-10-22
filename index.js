@@ -152,68 +152,40 @@ client.on("message", async message => {
 
   //  Resetea rodito pa poder iniciar un juego de nuevo
   if (command === 'reset') {
-    message.channel.send('Todo se fue al carajo, pero no los roles');
-    preparacion_on = false;
-    juego_on = false;
-    jugadores = new Set();
-    lobos = new Set();
-    aldeanos = new Set();
-  }
-
-  // Busca y eliminas a los usuarios con rol Anfitrion y Jugador
-  if(command === 'busca'){
-    let miembro = message.member;
-
-    let rolAnfitrion = message.guild.roles.find("name", 'Anfitrion');
-    let rolJugador = message.guild.roles.find("name", 'Jugador');
-    let miembroroles = message.guild.roles.get(rolJugador.id).members;
-
-    message.channel.send(`Tienes a **${miembroroles.size}** miembro(s) con el rol **Anfitrion**.`);
-
-    miembroroles.forEach((value, key, map) => {
-      value.removeRole(rolAnfitrion).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario) '));
-      value.removeRole(rolJugador).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
-    });
-
-      let rolLobo = message.guild.roles.find("name", 'Lobo');
-      let memberLobos = message.guild.roles.get(rolLobo.id).members;
-      memberLobos.forEach((value, key, map) => {
-          value.removeRole(rolLobo).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
-          message.channel.send(`${value} se elimino el rol: ${rolLobo}`);
-      });
-
-      let rolAldeano = message.guild.roles.find("name", 'Aldeano');
-      let memberAldeanos = message.guild.roles.get(rolAldeano.id).members;
-      memberAldeanos.forEach((value, key, map) => {
-          value.removeRole(rolAldeano).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
-          message.channel.send(`${value} se elimino el rol: ${rolAldeano}`);
-      });
-
-      let rolRey = message.guild.roles.find("name", 'Rey');
-      let memberReyes = message.guild.roles.get(rolRey.id).members;
-      memberReyes.forEach((value, key, map) => {
-          value.removeRole(rolRey).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
-          message.channel.send(`${value} se elimino el rol: ${rolRey}`);
-      });
-  }
-
-  if (command === 'comer') {
-
+    await removerRolesVariables();
   }
 
   function resetTodo() {
     preparacion_on = false;
     juego_on = false;
     jugadores = new Set();
-    removerAnfitrion();
+    removerRolesVariables();
   }
 
-  function removerAnfitrion() {
-    let miembro = message.member;
-    let role = message.guild.roles.find("name", 'Anfitrion');
-    if(!role) return message.channel.send('Rol no encontrado en el servidor.');
-    miembro.removeRole(role).catch(console.error);
-    message.channel.send(`El rol **${role.name}** del miembro **${miembro.user}** fue removido  correctamente.`);
+  // Busca y eliminas a los usuarios con rol Anfitrion y Jugador
+  async function removerRolesVariables() {
+    {
+      let miembro = message.member;
+
+      let rolAnfitrion = message.guild.roles.find("name", 'Anfitrion');
+      let rolJugador = message.guild.roles.find("name", 'Jugador');
+      let miembroroles = message.guild.roles.get(rolJugador.id).members;
+
+      message.channel.send(`Tienes a **${miembroroles.size}** miembro(s) con el rol **Anfitrion**.`);
+
+      miembroroles.forEach((value, key, map) => {
+        value.removeRole(rolAnfitrion).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario) '));
+        value.removeRole(rolJugador).catch(reason => console.log('Error al eliminar rol (seguro no existe en el usuario)'));
+      });
+
+      //  Resetea las variables de la aplicacion
+      message.channel.send('Todo se fue al carajo (Variables)');
+      preparacion_on = false;
+      juego_on = false;
+      jugadores = new Set();
+      lobos = new Set();
+      aldeanos = new Set();
+    }
   }
 
   //  Llenar los arreglos de los personajes
