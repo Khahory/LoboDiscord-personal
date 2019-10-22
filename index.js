@@ -155,6 +155,20 @@ client.on("message", async message => {
     await removerRolesVariables();
   }
 
+  //  El bot responde los menjaes privados (El universo oculto de los dm)
+  if (message.channel.type === "dm") {
+      if (command === 'comer'){
+          const sayMessage = args.join(" ");
+
+          for (let item of aldeanos) {
+
+              if (item) {
+                  item.delete();
+              }
+          }
+      }
+  }
+
 
 
   async function resetTodo() {
@@ -301,11 +315,7 @@ client.on("message", async message => {
   // }
 
 
-  //  El bot responde los menjaes privados
-  if (message.channel.type === "dm") {
-    message.author.send("You are DMing me now! = Khahory .dm");
-    return;
-  }
+
 
   if (command === "avatar") {
     // await message.reply(message.author.avatarURL);
