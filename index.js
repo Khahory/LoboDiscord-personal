@@ -155,11 +155,10 @@ client.on("message", async message => {
     await removerRolesVariables();
   }
 
-  function resetTodo() {
-    preparacion_on = false;
-    juego_on = false;
-    jugadores = new Set();
-    removerRolesVariables();
+
+
+  async function resetTodo() {
+    await removerRolesVariables();
   }
 
   // Busca y eliminas a los usuarios con rol Anfitrion y Jugador
@@ -217,6 +216,7 @@ client.on("message", async message => {
 
           //  Enviar DM a los que tienen roles
           await enviarAvisosPersonajes();
+          await nocheExe();
       }
   }
 
@@ -233,16 +233,37 @@ client.on("message", async message => {
       }
   }
 
+  //    Accion que pasa en la noche
+    async function nocheExe() {
+        {
+            if (lobos) {
+                for (let item of lobos) {
+                    item.send('Es de noche, que comeremos hoy ?');
+                    await queHacerLobo();
+                }
+            }else {message.channel.send('No hay lobos - nocheExe()')}
 
-  function ejecutar_noche() {
-    let rolAldeano = message.guild.roles.find("name", 'Jugador');
-    let miembroroles = message.guild.roles.get(rolAldeano.id).members;
+            if (aldeanos) {
+                for (let item of aldeanos) {
+                    item.send('Es de noche, suerme bien...por ahora');
+                }
+            }else {message.channel.send('No hay aldeanos - nocheExe()')}
+        }
+    }
 
-    message.author.send(`Tienes a **${miembroroles.size}** miembro(s) con el rol **Jugador**.`);
+  //    Lobo que hacer .exe
+  async function queHacerLobo() {
+      {
+          let contador = 0;
 
-    miembroroles.forEach((value, key, map) => {
-      message.author.send(`Aldeano es: ${value} su ID es: **${key}**`)
-    });
+          for (let item of lobos) {
+              item.send('Puedes comerte a una estas personas mmm riko');
+              for (let item2 of aldeanos) {
+                  item.send('Esta: ' +item2 +' en: ' +contador);
+                  contador++;
+              }
+          }
+      }
   }
 
 
@@ -315,12 +336,6 @@ client.on("message", async message => {
     //   color: "AQUA"
     // }, message.author.send('Me gusta'));
   }
-
-
-
-
-
-
 
   if(command === "ping") {
     // channel.send('hello!')
