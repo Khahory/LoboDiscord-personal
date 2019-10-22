@@ -160,6 +160,8 @@ client.on("message", async message => {
     preparacion_on = false;
     juego_on = false;
     jugadores = new Set();
+    lobos = new Set();
+    aldeanos = new Set();
   }
 
   // Busca y eliminas a los usuarios con rol Anfitrion y Jugador
@@ -220,20 +222,37 @@ client.on("message", async message => {
 
   //  Llenar los arreglos de los personajes
   function asignarPersonajes() {
+      const gente = [];
 
     jugadores.forEach((value, value2) => {
       jugadoresSinRoles.add(value);
+
+      gente.push(value);
     });
 
-    let x = message.member.user;
-    let limiteJugadores = jugadoresSinRoles.size;
-    let gente = [];
-    message.channel.send('LimiteJugadores: ' +limiteJugadores);
 
+    let limiteJugadores;
 
     jugadores.forEach((value, key, map) => {
+        limiteJugadores = gente.length;
       let numRandom = Math.floor(Math.random() * limiteJugadores);
+
+      if (lobos.size < 1) {
+          lobos.add(gente[numRandom]);
+          value.send('El lobo es: ' +gente[numRandom]);
+          gente.splice(numRandom, 1);
+          return;
+      }
+
+      if (aldeanos.size < 5) {
+          aldeanos.add(gente[numRandom]);
+          value.send('El aldeano es: ' +gente[numRandom]);
+          gente.splice(numRandom, 1);
+      }
+
     });
+
+    message.channel.send('Arreglo gente cantidad: ' +gente.length);
 
   }
 
