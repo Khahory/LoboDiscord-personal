@@ -13,9 +13,6 @@ let preparacion_on = false;
 
 //  Arreglos del servidor
 let jugadores = new Set();
-let lobos = new Set();
-let aldeanos = new Set();
-let reyes = new Set();
 
 client.on("ready", () => {
   console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
@@ -90,20 +87,6 @@ client.on("message", async message => {
     jugadores.forEach((value, index, array) => {
       message.channel.send('Jugadores activos: ' +value);
     });
-
-    message.channel.send('------------Ahora mostraremos las lista de los roles---------------');
-    message.channel.send('Tuumm tumm tummm, taran!!');
-
-    message.channel.send('Los **Lobos** son :');
-    lobos.forEach((value, value2, set) => {
-        message.channel.send('Lobo: ' +value);
-    });
-
-    message.channel.send('Los **Aldenaos** son :');
-    aldeanos.forEach((value, value2, set) => {
-        message.channel.send('Aldeano: ' +value);
-    });
-
   }
 
   //  Agregar a los jugadores a la lista y asignarles e rol Jugador
@@ -139,10 +122,25 @@ client.on("message", async message => {
 
       //  Asignar los roles random
       if (rolLider) {
+        let rolJugador = message.guild.roles.find("name", 'Jugador');
+        let miembroroles = message.guild.roles.get(rolJugador.id).members;
         juego_on = true;
 
-        await asignarPersonajes();
+        //  Lista que recorre a todos lo que sean de rol Jugador
+        miembroroles.forEach((value, key, map) => {
+          let rolRandom = message.guild.roles.find('name', RolServer.RolServer[Math.floor(Math.random() * 3)]);
+          value.addRole(rolRandom).then(() => {   //Asignamos el rol al jugador
 
+            message.channel.send(`Rol asignado ${value}`);
+            value.send(`Tu rol es ${rolRandom.name}`);  //  Enviamos un dm al jugador que toca
+
+            // comprobamos si el rol que le toco es un lobo
+            if (rolRandom.name === 'Lobo') {
+              ejecutar_noche();
+            }
+
+          });
+        });
       } else {
         message.channel.send(`No eres el **Anfitrion** ${miembro.user}`);
       }
@@ -156,8 +154,6 @@ client.on("message", async message => {
     preparacion_on = false;
     juego_on = false;
     jugadores = new Set();
-    lobos = new Set();
-    aldeanos = new Set();
   }
 
   // Busca y eliminas a los usuarios con rol Anfitrion y Jugador
@@ -216,52 +212,6 @@ client.on("message", async message => {
     message.channel.send(`El rol **${role.name}** del miembro **${miembro.user}** fue removido  correctamente.`);
   }
 
-  //  Llenar los arreglos de los personajes
-  async function asignarPersonajes() {
-      {
-          let limiteJugadores;
-          const gente = [];
-
-          jugadores.forEach((value, value2) => {
-              gente.push(value);
-          });
-
-          jugadores.forEach((value, key, map) => {
-              limiteJugadores = gente.length;
-              let numRandom = Math.floor(Math.random() * limiteJugadores);
-
-              if (lobos.size < 1) {
-                  lobos.add(gente[numRandom]);
-                  gente.splice(numRandom, 1);
-                  return;
-              }
-
-              if (aldeanos.size < 5) {
-                  aldeanos.add(gente[numRandom]);
-                  gente.splice(numRandom, 1);
-              }
-
-          });
-
-          //  Enviar DM a los que tienen roles
-          await enviarAvisosPersonajes();
-      }
-  }
-
-    //  Enviar DM a los que tienen roles
-  async function enviarAvisosPersonajes() {
-      {
-          for (let item of lobos) {
-              item.send('Eres un Lobo: ' +item);
-          }
-
-          for (let item of aldeanos) {
-              item.send('Eres un Aldeano: ' +item);
-          }
-      }
-  }
-
-
   function ejecutar_noche() {
     let rolAldeano = message.guild.roles.find("name", 'Jugador');
     let miembroroles = message.guild.roles.get(rolAldeano.id).members;
@@ -271,6 +221,10 @@ client.on("message", async message => {
     miembroroles.forEach((value, key, map) => {
       message.author.send(`Aldeano es: ${value} su ID es: **${key}**`)
     });
+  }
+
+  function actua_Lobo() {
+
   }
 
 
